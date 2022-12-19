@@ -129,5 +129,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-.idea/
+.idea
 tickets.iml
+.turbo
+package-lock.json
+*/**/node_modules

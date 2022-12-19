@@ -133,3 +133,4 @@ dist
 tickets.iml
 .turbo
 package-lock.json
+*/**/node_modules

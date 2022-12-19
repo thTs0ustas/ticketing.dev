@@ -1,0 +1,23 @@
+apiVersion: skaffold/v3
+kind: Config
+manifests:
+  rawYaml:
+    - ./infra/k8s/*
+deploy:
+  kubectl: {}
+
+build:
+  local:
+    push: false
+  artifacts:
+    - image: tickets/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+        noCache: false
+        pullParent: false
+        squash: false
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
