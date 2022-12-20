@@ -13,13 +13,11 @@ spec:
     spec:
       containers:
         - name: auth-mongo
-          image: mongo
+          image: mongo:latest
           resources:
             limits:
               memory: "256Mi"
-              cpu: "500m"
-          ports:
-            - containerPort: 3000
+              cpu: "1000m"
 
 ---
 apiVersion: v1
