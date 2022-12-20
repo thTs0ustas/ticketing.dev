@@ -5,7 +5,6 @@ manifests:
     - ./infra/k8s/*
 deploy:
   kubectl: {}
-
 build:
   local:
     push: false
