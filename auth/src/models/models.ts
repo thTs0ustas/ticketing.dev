@@ -14,17 +14,29 @@ interface UserDoc extends Document {
   email: string;
 }
 
-const userSchema = new Schema<UserType>({
-  password: { type: String, required: true },
-  email: { type: String, required: true },
-});
+const userSchema = new Schema<UserType>(
+  {
+    password: { type: String, required: true },
+    email: { type: String, required: true },
+  },
+  {
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.password;
+      },
+      versionKey: false,
+    },
+  }
+);
 
-userSchema.pre("save", async function (done) {
+userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     const hashed = await Password.toHash(this.get("password"));
     this.set("password", hashed);
   }
-  done();
+  next();
 });
 
 userSchema.statics.build = async (attr: UserType) => new User<UserType>(attr);

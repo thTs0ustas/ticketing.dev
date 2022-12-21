@@ -1,8 +1,10 @@
 import express, { Request, Response, type Router } from "express";
-import { body, validationResult } from "express-validator";
+import { body } from "express-validator";
 import { BadRequestError } from "../errors/bad-request-error";
-import { RequestError } from "../errors/request-validator-error";
 import { User } from "../models/models";
+import jwt from "jsonwebtoken";
+import { validateRequests } from "../middlewares/validate-request";
+
 const router: Router = express.Router();
 
 router.post(
@@ -14,23 +16,29 @@ router.post(
       .isLength({ min: 4, max: 20 })
       .withMessage("Wrong password."),
   ],
+  validateRequests,
   async (req: Request, res: Response) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      throw new RequestError(errors.array());
-    }
-
     const { email, password } = req.body;
 
     const exists = await User.findOne({ email });
 
-    if (!exists) {
+    if (exists) {
       throw new BadRequestError("Email already exists");
     }
 
-    const newUser = User.build({ email, password });
+    const newUser = await User.build({ email, password });
     await newUser.save();
+
+    // Generate Jwt
+
+    const userJwt = jwt.sign(
+      { id: newUser.id, email: newUser.email },
+      process.env.JWT_KEY!
+    );
+
+    // Store jwt to session
+
+    req.session = { jwt: userJwt };
 
     res.status(201).send(newUser);
   }
