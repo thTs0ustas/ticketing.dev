@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import { app } from "../app";
-
+declare global {
+  var signin: () => Promise<string[]>;
+}
 let mongo: any;
 
 beforeAll(async () => {
