@@ -20,3 +20,14 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
+    - image: tickets/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+        noCache: false
+        pullParent: false
+        squash: false
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
