@@ -5,6 +5,7 @@ import { app } from "../app";
 let mongo: any;
 
 beforeAll(async () => {
+  mongoose.set("strictQuery", false);
   process.env.JWT_KEY = "secret";
   mongo = await MongoMemoryServer.create();
   const mongoUri = mongo.getUri();
