@@ -5,7 +5,7 @@ import { User } from "../models/models";
 import jwt from "jsonwebtoken";
 import { validateRequests } from "../middlewares/validate-request";
 import { BadRequestError } from "../errors/bad-request-error";
-import { Password } from "../services/password";
+import { compare } from "../services/password";
 
 const router: Router = express.Router();
 
@@ -24,10 +24,7 @@ router.post(
       throw new BadRequestError("Invalid credentials.");
     }
 
-    const verifyPassword = await Password.compare(
-      existingUser.password,
-      password
-    );
+    const verifyPassword = await compare(existingUser.password, password);
     if (!verifyPassword) {
       throw new BadRequestError("Invalid credentials.");
     }

@@ -1,5 +1,5 @@
 import { Document, Model, model, Schema } from "mongoose";
-import { Password } from "../services/password";
+import { toHash } from "../services/password";
 
 interface UserType {
   password: string;
@@ -33,7 +33,7 @@ const userSchema = new Schema<UserType>(
 
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    const hashed = await Password.toHash(this.get("password"));
+    const hashed = await toHash(this.get("password"));
     this.set("password", hashed);
   }
   next();

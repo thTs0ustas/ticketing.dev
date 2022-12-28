@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package.json .
 
 RUN npm install pnpm -g
-RUN pnpm install
+RUN pnpm install --only=prod
 
 COPY . .
 
